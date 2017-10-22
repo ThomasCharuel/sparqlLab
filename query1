@@ -1,0 +1,13 @@
+# Select each person in wikidata having done his studies at "ECE Paris"
+# Extract his name and URI
+
+SELECT ?person ?personLabel
+WHERE {
+
+    # each person that studied at ECE Paris
+    ?person wdt:P69 wd:Q3577731 .
+
+    SERVICE wikibase:label{
+        bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en" .
+    }
+}

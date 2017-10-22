@@ -1,0 +1,33 @@
+# Produce a timeline of inception dates of french academic institutions
+# Display their names and count of people educated in these institutions (if any)
+#defaultView:Timeline
+
+SELECT DISTINCT ?school ?schoolLabel ?inception ?wikiPersons
+WHERE{
+    {
+        SELECT ?school (count(*) as ?wikiPersons) WHERE {
+            SELECT DISTINCT ?person ?school WHERE {
+                ?school wdt:P31/wdt:P279* wd:Q4671277;
+                    wdt:P17 wd:Q142 .
+
+                ?person wdt:P69 ?school .
+            }
+        } GROUP BY ?school
+    } 
+    UNION 
+    {
+        SELECT DISTINCT ?school (0 as ?wikiPersons) WHERE {
+            ?school wdt:P31/wdt:P279* wd:Q4671277;
+                    wdt:P17 wd:Q142 .
+            FILTER NOT EXISTS {
+                ?person wdt:P69 ?school
+            }
+        }
+    }
+
+    ?school wdt:P571 ?inception .
+
+    SERVICE wikibase:label{
+        bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en" .
+    }
+}

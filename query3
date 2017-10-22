@@ -1,0 +1,17 @@
+# Select the count of institutions similar to "ECE Paris" by country with country names
+
+SELECT ?country ?countryLabel (count(*) AS ?schoolsCount)
+WHERE {
+
+    # Academic institution
+    ?school wdt:P31/wdt:P279* wd:Q4671277 .
+    
+    # get school country
+    ?school wdt:P17 ?country .
+
+    SERVICE wikibase:label{
+        bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en" .
+    }
+}
+GROUP BY ?country ?countryLabel
+ORDER BY DESC(?schoolsCount)

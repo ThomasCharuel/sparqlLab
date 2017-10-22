@@ -1,0 +1,26 @@
+# Select institutions similar to "ECE Paris" within a radius of 5km
+# Display them on a map
+#defaultView:Map
+
+SELECT ?school ?schoolLabel ?coordinates
+WHERE {
+
+    # ECE Paris coordinates
+    wd:Q3577731 wdt:P625 ?ECEcoordinates .
+
+    # within a radius of 5km centered at ECE Paris
+    SERVICE wikibase:around {
+        ?school wdt:P625 ?coordinates .
+        bd:serviceParam wikibase:center ?ECEcoordinates .
+        bd:serviceParam wikibase:radius "5" .
+    }
+
+    # Is an academic institution
+    FILTER EXISTS {
+        ?school wdt:P31/wdt:P279* wd:Q4671277
+    } .
+
+    SERVICE wikibase:label{
+        bd:serviceParam wikibase:language "[AUTO_LANGUAGE],fr,en" .
+    }
+}
